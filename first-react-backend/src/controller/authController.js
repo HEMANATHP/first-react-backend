@@ -1,18 +1,18 @@
-const users = [
-  {
-    id: 1,
-    email: "hemanath@gmail.com",
-    password: "123456",
-    name: "Hemanath"
-  },
-  {
-    id: 2,
-    email: "john@gmail.com",
-    password: "password123",
-    name: "John"
-  }
-]; 
- 
- export const login = (req,res)=>{
-    res.send("loged in successfully")
-}
+import { loginService } from "../services/authServices.js"
+
+ export const login =  async(req,res)=>{
+    const {email,password}= req.body
+
+    if(!email || !password){
+      return res.status(400).json({
+        message:"email and password are required"
+      })
+    } 
+    const user = await loginService(email,password)
+
+    if(!user){
+      return res.status(401).json({message:"invalid authentication error"})
+    }
+    
+    return res.status(200).send("found the user and allowed")
+    }
