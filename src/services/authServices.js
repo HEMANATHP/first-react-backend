@@ -1,5 +1,7 @@
 import prisma from "../config/prisma.js"
 import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
+
 export const loginService = async(email,password)=>{
     const user = await prisma.user.findUnique({
     where:{email}
@@ -12,7 +14,12 @@ export const loginService = async(email,password)=>{
     if(!ismatched){
         return null
     }
-    return user
+    const token = jwt.sign(
+        {id:user.id , email:user.email},
+        process.env.JWT_SECRET,
+        {expiresIn:  "15m"}
+    )
+    return {token,user}
 }
 
 export const registerService = async(name,email,password)=>{

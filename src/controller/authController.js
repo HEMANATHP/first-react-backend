@@ -9,13 +9,20 @@ import { loginService, registerService } from "../services/authServices.js"
         message:"email and password are required"
       })
     } 
-    const user = await loginService(email,password)
+    const loginData = await loginService(email,password)
 
+
+    if (!loginData) {
+    return res.status(401).json({
+        message: "Invalid authentication"
+    });
+}
+    const {user,token} = loginData;
     if(!user){
       return res.status(401).json({message:"invalid authentication error"})
     }
     
-    return res.status(200).send("found the user and allowed")
+    return res.status(200).json({message:"success",token,user})
     }
 
     export const register = async(req,res)=>{
