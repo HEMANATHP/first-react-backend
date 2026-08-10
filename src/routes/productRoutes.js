@@ -4,11 +4,14 @@ import { authMiddleware } from '../middleware/authMiddleware.js';
 
 
 const router =express.Router()
-// router.get("/product",authMiddleware,product)
-router.post("/",createProduct)
+
+// READ endpoints are public - anyone can browse products
 router.get("/",getProduct)
 router.get("/:id",getProductById)
-router.put("/:id",updateProduct)
-router.delete("/:id",deleteProduct)
+
+// WRITE endpoints require a valid JWT token
+router.post("/",authMiddleware,createProduct)
+router.put("/:id",authMiddleware,updateProduct)
+router.delete("/:id",authMiddleware,deleteProduct)
 
 export default router
